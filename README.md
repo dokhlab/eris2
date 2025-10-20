@@ -25,7 +25,10 @@ conda create --name environment_name python=3.11
 conda activate environment_name
 pip install -r requirements.txt
 ```
-
+3. Download the model files
+```bash
+https://zenodo.org/records/17400047?preview=1&token=eyJhbGciOiJIUzUxMiIsImlhdCI6MTc2MDk4MjEyMCwiZXhwIjoxNzY3MjI1NTk5fQ.eyJpZCI6IjcwZjEyMzQyLWUyMWYtNDNhYy05ZGIwLTMwN2E3OWFiYzIzYSIsImRhdGEiOnt9LCJyYW5kb20iOiIwNzIxZDA3NDliYjM0M2NhODA1MzhlYTdlZmFmNmFmNiJ9.k098x_FsgAJGwqxwIW2K6HiCr8A48xcNQakri9_-wJV9QcGZ7J2Y5GI1z3edJhwu9pWKIdnwfkWszYylElg8PQ
+```
 ## Usage
 
 ### Single Mutation Prediction
