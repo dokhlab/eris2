@@ -25,9 +25,38 @@ conda create --name environment_name python=3.11
 conda activate environment_name
 pip install -r requirements.txt
 ```
-3. Download the model files
+4. Download Pre-trained Model Files
+
+The pre-trained model files are available on Zenodo:
+
+**Zenodo Repository:** https://zenodo.org/records/17400047?preview=1
+
+The repository contains the following model files (218.5 MB total):
+- `model.pth` - Classical model for standard predictions
+- `model_quantum.pth` - Quantum-enhanced model for quantum simulations
+
+To download the models:
+1. Visit the Zenodo repository link above
+2. Download both `model.pth` and `model_quantum.pth` files
+3. Place them in the root directory of the project
+
+Alternatively, download directly using wget:
 ```bash
-https://zenodo.org/records/17400047?preview=1&token=eyJhbGciOiJIUzUxMiIsImlhdCI6MTc2MDk4MjEyMCwiZXhwIjoxNzY3MjI1NTk5fQ.eyJpZCI6IjcwZjEyMzQyLWUyMWYtNDNhYy05ZGIwLTMwN2E3OWFiYzIzYSIsImRhdGEiOnt9LCJyYW5kb20iOiIwNzIxZDA3NDliYjM0M2NhODA1MzhlYTdlZmFmNmFmNiJ9.k098x_FsgAJGwqxwIW2K6HiCr8A48xcNQakri9_-wJV9QcGZ7J2Y5GI1z3edJhwu9pWKIdnwfkWszYylElg8PQ
+# Download classical model
+wget "https://zenodo.org/records/17400047/files/model.pth?download=1&preview=1" -O model.pth
+
+# Download quantum model
+wget "https://zenodo.org/records/17400047/files/model_quantum.pth?download=1&preview=1" -O model_quantum.pth
+```
+
+After downloading, your directory structure should include:
+```bash
+eris2/
+├── model.pth
+├── model_quantum.pth
+├── src/
+├── examples/
+└── ...
 ```
 ## Usage
 
