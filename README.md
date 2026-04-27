@@ -2,6 +2,8 @@
 
 A deep learning model for predicting protein stability changes (ΔΔG) upon mutations.
 
+**Web Server:** [https://eris2.dokhlab.org/](https://eris2.dokhlab.org/)
+
 ## Installation
 
 1. Clone the repository:
