@@ -48,7 +48,7 @@ def predict_ddg(pdb_file, chain_id, mutation, model_path, device="cuda"):
     # Load model
     model = DDGPredictor(embedding_dim=1280)
     # Add map_location to handle CPU loading of CUDA models
-    model.load_state_dict(torch.load(model_path, map_location=torch.device(device)))
+    model.load_state_dict(torch.load(model_path, map_location=torch.device(device), weights_only=False))
     model.to(device)
     model.eval()
     
@@ -117,7 +117,7 @@ def predict_ddg(pdb_file, chain_id, mutation, model_path, device="cuda"):
                 batch['atom_features']
             )
         
-        return prediction.item()
+        return -prediction.item()
     
     finally:
         # Clean up temporary directory

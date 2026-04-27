@@ -48,7 +48,7 @@ def predict_multiple_mutations(csv_file, pdb_folder, model_path, output_file, ba
     # Load model
     model = DDGPredictor(embedding_dim=1280)
     
-    model.load_state_dict(torch.load(model_path, map_location=torch.device(device)))
+    model.load_state_dict(torch.load(model_path, map_location=torch.device(device), weights_only=False))
     model.to(device)
     model.eval()
     
@@ -77,17 +77,18 @@ def predict_multiple_mutations(csv_file, pdb_folder, model_path, output_file, ba
     
     # Prepare output DataFrame
     results = []
-    
+    items_processed = 0
+
     # Make predictions
     with torch.no_grad():
-        for batch_idx, batch in enumerate(tqdm(data_loader, desc="Making predictions")):
+        for batch in tqdm(data_loader, desc="Making predictions"):
             if batch is None:
                 continue
-                
+
             # Move batch to device
-            batch = {k: v.to(device) if isinstance(v, torch.Tensor) else v 
+            batch = {k: v.to(device) if isinstance(v, torch.Tensor) else v
                     for k, v in batch.items()}
-            
+
             # Get predictions
             predictions = model(
                 batch['wt_embedding'],
@@ -102,12 +103,11 @@ def predict_multiple_mutations(csv_file, pdb_folder, model_path, output_file, ba
                 batch['hydrophobicity_features'],
                 batch['atom_features']
             )
-            
-            # Get corresponding rows from original DataFrame
-            start_idx = batch_idx * batch_size
-            end_idx = min(start_idx + batch_size, len(df))
-            batch_df = df.iloc[start_idx:end_idx]
-            
+
+            # Get corresponding rows using actual items processed (not batch_idx * batch_size)
+            actual_batch_size = predictions.shape[0]
+            batch_df = df.iloc[items_processed:items_processed + actual_batch_size]
+
             # Store results
             for i, pred in enumerate(predictions):
                 if i < len(batch_df):
@@ -115,8 +115,9 @@ def predict_multiple_mutations(csv_file, pdb_folder, model_path, output_file, ba
                         'uniprot': batch_df.iloc[i]['uniprot'],
                         'chain': batch_df.iloc[i]['chain'],
                         'mutation': batch_df.iloc[i]['mut'],
-                        'predicted_ddg': pred.item()
+                        'predicted_ddg': -pred.item()
                     })
+            items_processed += actual_batch_size
     
     # Create results DataFrame
     results_df = pd.DataFrame(results)

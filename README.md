@@ -31,22 +31,19 @@ The pre-trained model files are available on Zenodo:
 
 **Zenodo Repository:** https://zenodo.org/records/17400047?preview=1
 
-The repository contains the following model files (218.5 MB total):
+The repository contains the following model files:
 - `model.pth` - Classical model for standard predictions
-- `model_quantum.pth` - Quantum-enhanced model for quantum simulations
 
 To download the models:
 1. Visit the Zenodo repository link above
-2. Download both `model.pth` and `model_quantum.pth` files
+2. Download `model.pth`  file
 3. Place them in the root directory of the project
 
 Alternatively, download directly using wget:
 ```bash
 # Download classical model
-wget "https://zenodo.org/records/17400047/files/model.pth?download=1&preview=1" -O model.pth
+wget "https://zenodo.org/records/17400047/files/model.pth?download=1" -O model.pth
 
-# Download quantum model
-wget "https://zenodo.org/records/17400047/files/model_quantum.pth?download=1&preview=1" -O model_quantum.pth
 ```
 
 After downloading, your directory structure should include:
@@ -86,53 +83,6 @@ python src/predict_multiple.py \
     --batch_size 32 \
     --device cuda
 ```
-To predict ΔΔG for a single mutation with Quantum simulation:
-
-```bash
-python src/predict_quantum.py \
-    --pdb examples/1D5R.pdb \
-    --chain A \
-    --mutation R1G \
-    --model model_quantum.pth \
-    --device cuda
-```    
-
-To predict ΔΔG for multiple mutations from a CSV file with Quantum simulation:
-
-```bash
-python src/predict_multiple_quantum.py \
-    --csv examples/ddg.csv \
-    --pdb_folder examples/pdb_files \
-    --model model_quantum.pth \
-    --output predictions.csv \
-    --batch_size 32 \
-    --device cuda
-```
-
-To predict ΔΔG for a single mutation with real Quantum hardware:
-(Please update your IBM API token inside model_quantum_real_hw.py file at line 17)
-
-```bash
-python src/predict_quantum_real_hw.py \
-    --pdb examples/1D5R.pdb \
-    --chain A \
-    --mutation R1G \
-    --model model_quantum.pth \
-    --device cuda
-```    
-
-To predict ΔΔG for multiple mutations from a CSV file with real Quantum hardware:
-(Please update your IBM API token inside model_quantum_real_hw.py file at line 17)
-```bash
-python src/predict_multiple_quantum_real_hw.py \
-    --csv examples/ddg.csv \
-    --pdb_folder examples/pdb_files \
-    --model model_quantum.pth \
-    --output predictions.csv \
-    --batch_size 32 \
-    --device cuda
-```
-
 ### Input Format
 
 1. For single mutations:
