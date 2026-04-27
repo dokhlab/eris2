@@ -16,15 +16,16 @@ conda env create -f environment.yml
 conda activate ERIS2
 ```
 
-Make sure to run the classical prediction first to generate feature vectors which will be store in the cache folder. 
-For the Quantum part create a seperate virtual environment
-3. Create and activate conda environment for quantum prediction
+Make sure to run the classical prediction first to generate feature vectors which will be stored in the cache folder.
+For the quantum part, create a separate virtual environment:
 
+3. Create and activate conda environment for quantum prediction:
 ```bash
 conda create --name environment_name python=3.11
 conda activate environment_name
 pip install -r requirements.txt
 ```
+
 4. Download Pre-trained Model Files
 
 The pre-trained model files are available on Zenodo:
@@ -33,10 +34,11 @@ The pre-trained model files are available on Zenodo:
 
 The repository contains the following model files:
 - `model.pth` - Classical model for standard predictions
+- `model_quantum.pth` - Quantum-enhanced model for quantum simulations
 
 To download the models:
 1. Visit the Zenodo repository link above
-2. Download `model.pth`  file
+2. Download both `model.pth` and `model_quantum.pth` files
 3. Place them in the root directory of the project
 
 Alternatively, download directly using wget:
@@ -44,17 +46,36 @@ Alternatively, download directly using wget:
 # Download classical model
 wget "https://zenodo.org/records/17400047/files/model.pth?download=1" -O model.pth
 
+# Download quantum model
+wget "https://zenodo.org/records/17400047/files/model_quantum.pth?download=1" -O model_quantum.pth
 ```
 
 After downloading, your directory structure should include:
-```bash
+```
 eris2/
 ├── model.pth
 ├── model_quantum.pth
+├── mega_full.csv
+├── environment.yml
+├── requirements.txt
 ├── src/
+│   ├── predict.py
+│   ├── predict_multiple.py
+│   ├── predict_quantum.py
+│   ├── predict_multiple_quantum.py
+│   ├── predict_quantum_real_hw.py
+│   ├── predict_multiple_quantum_real_hw.py
+│   ├── model.py
+│   ├── model_quantum.py
+│   ├── model_quantum_real_hw.py
+│   └── dataset.py
 ├── examples/
+│   ├── 1D5R.pdb
+│   ├── ddg.csv
+│   └── pdb_files/
 └── ...
 ```
+
 ## Usage
 
 ### Single Mutation Prediction
@@ -83,7 +104,62 @@ python src/predict_multiple.py \
     --batch_size 32 \
     --device cuda
 ```
-### Input Format
+
+### Single Mutation Prediction with Quantum Simulation
+
+To predict ΔΔG for a single mutation with quantum simulation:
+
+```bash
+python src/predict_quantum.py \
+    --pdb examples/1D5R.pdb \
+    --chain A \
+    --mutation R1G \
+    --model model_quantum.pth \
+    --device cuda
+```
+
+### Multiple Mutations Prediction with Quantum Simulation
+
+To predict ΔΔG for multiple mutations from a CSV file with quantum simulation:
+
+```bash
+python src/predict_multiple_quantum.py \
+    --csv examples/ddg.csv \
+    --pdb_folder examples/pdb_files \
+    --model model_quantum.pth \
+    --output predictions.csv \
+    --batch_size 32 \
+    --device cuda
+```
+
+### Single Mutation Prediction on Real Quantum Hardware
+
+> Before running, update your IBM API token in `src/model_quantum_real_hw.py` at line 17.
+
+```bash
+python src/predict_quantum_real_hw.py \
+    --pdb examples/1D5R.pdb \
+    --chain A \
+    --mutation R1G \
+    --model model_quantum.pth \
+    --device cuda
+```
+
+### Multiple Mutations Prediction on Real Quantum Hardware
+
+> Before running, update your IBM API token in `src/model_quantum_real_hw.py` at line 17.
+
+```bash
+python src/predict_multiple_quantum_real_hw.py \
+    --csv examples/ddg.csv \
+    --pdb_folder examples/pdb_files \
+    --model model_quantum.pth \
+    --output predictions.csv \
+    --batch_size 32 \
+    --device cuda
+```
+
+## Input Format
 
 1. For single mutations:
    - PDB file: Standard PDB format
@@ -91,15 +167,14 @@ python src/predict_multiple.py \
 
 2. For multiple mutations (CSV file):
    - Required columns:
-     - uniprot: Protein identifier
-     - chain: Chain identifier
-     - mut: Mutation in format 'A123G'
-     - ddg: Experimental ΔΔG value (optional)
+     - `uniprot`: Protein identifier
+     - `chain`: Chain identifier
+     - `mut`: Mutation in format `A123G`
+     - `ddg`: Experimental ΔΔG value (optional)
 
-### Example
+### Example CSV format
 
-```python
-# Example CSV format
+```
 uniprot,chain,mut,ddg
 1ABC,A,A10G,1.5
 1ABC,A,L20M,-0.8
@@ -114,9 +189,6 @@ The model uses a combination of:
 - Hydrogen bond features
 - Physicochemical properties
 
-
-All dependencies are automatically installed when creating the conda environment.
-
 ## License
 
-MIT License 
+MIT License
