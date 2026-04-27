@@ -1,4 +1,4 @@
-# Protein Stability Predictor
+# ERIS2: A deep-learning web server for predicting mutation-induced protein stability changes
 
 A deep learning model for predicting protein stability changes (ΔΔG) upon mutations.
 
@@ -10,65 +10,44 @@ git clone https://github.com/dokhlab/eris2.git
 cd eris2
 ```
 
-2. Create and activate conda environment for classical prediction:
+2. Create and activate conda environment:
 ```bash
 conda env create -f environment.yml
 conda activate ERIS2
 ```
 
-Make sure to run the classical prediction first to generate feature vectors which will be stored in the cache folder.
-For the quantum part, create a separate virtual environment:
+3. Download Pre-trained Model File
 
-3. Create and activate conda environment for quantum prediction:
-```bash
-conda create --name environment_name python=3.11
-conda activate environment_name
-pip install -r requirements.txt
-```
-
-4. Download Pre-trained Model Files
-
-The pre-trained model files are available on Zenodo:
+The pre-trained model file is available on Zenodo:
 
 **Zenodo Repository:** https://zenodo.org/records/17400047
 
-The repository contains the following model files:
-- `model.pth` - Classical model for standard predictions
-- `model_quantum.pth` - Quantum-enhanced model for quantum simulations
+The repository contains the model file:
+- `model.pth` - Deep learning model for standard predictions
 
-To download the models:
+To download the model:
 1. Visit the Zenodo repository link above
-2. Download both `model.pth` and `model_quantum.pth` files
-3. Place them in the root directory of the project
+2. Download the `model.pth` file
+3. Place it in the root directory of the project
 
 Alternatively, download directly using wget:
 ```bash
-# Download classical model
 wget "https://zenodo.org/records/17400047/files/model.pth?download=1" -O model.pth
-
-# Download quantum model
-wget "https://zenodo.org/records/17400047/files/model_quantum.pth?download=1" -O model_quantum.pth
 ```
 
 After downloading, your directory structure should include:
 ```
 eris2/
 ├── model.pth
-├── model_quantum.pth
-├── mega_full.csv
 ├── environment.yml
 ├── requirements.txt
 ├── src/
 │   ├── predict.py
 │   ├── predict_multiple.py
-│   ├── predict_quantum.py
-│   ├── predict_multiple_quantum.py
-│   ├── predict_quantum_real_hw.py
-│   ├── predict_multiple_quantum_real_hw.py
 │   ├── model.py
-│   ├── model_quantum.py
-│   ├── model_quantum_real_hw.py
-│   └── dataset.py
+│   ├── dataset.py
+│   ├── mut_seq.py
+│   └── main_multi_grid_5fold.py
 ├── examples/
 │   ├── 1D5R.pdb
 │   ├── ddg.csv
@@ -100,60 +79,6 @@ python src/predict_multiple.py \
     --csv examples/ddg.csv \
     --pdb_folder examples/pdb_files \
     --model model.pth \
-    --output predictions.csv \
-    --batch_size 32 \
-    --device cuda
-```
-
-### Single Mutation Prediction with Quantum Simulation
-
-To predict ΔΔG for a single mutation with quantum simulation:
-
-```bash
-python src/predict_quantum.py \
-    --pdb examples/1D5R.pdb \
-    --chain A \
-    --mutation R1G \
-    --model model_quantum.pth \
-    --device cuda
-```
-
-### Multiple Mutations Prediction with Quantum Simulation
-
-To predict ΔΔG for multiple mutations from a CSV file with quantum simulation:
-
-```bash
-python src/predict_multiple_quantum.py \
-    --csv examples/ddg.csv \
-    --pdb_folder examples/pdb_files \
-    --model model_quantum.pth \
-    --output predictions.csv \
-    --batch_size 32 \
-    --device cuda
-```
-
-### Single Mutation Prediction on Real Quantum Hardware
-
-> Before running, update your IBM API token in `src/model_quantum_real_hw.py` at line 17.
-
-```bash
-python src/predict_quantum_real_hw.py \
-    --pdb examples/1D5R.pdb \
-    --chain A \
-    --mutation R1G \
-    --model model_quantum.pth \
-    --device cuda
-```
-
-### Multiple Mutations Prediction on Real Quantum Hardware
-
-> Before running, update your IBM API token in `src/model_quantum_real_hw.py` at line 17.
-
-```bash
-python src/predict_multiple_quantum_real_hw.py \
-    --csv examples/ddg.csv \
-    --pdb_folder examples/pdb_files \
-    --model model_quantum.pth \
     --output predictions.csv \
     --batch_size 32 \
     --device cuda
