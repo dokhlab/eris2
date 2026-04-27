@@ -29,7 +29,7 @@ pip install -r requirements.txt
 
 The pre-trained model files are available on Zenodo:
 
-**Zenodo Repository:** https://zenodo.org/records/17400047?preview=1
+**Zenodo Repository:** https://zenodo.org/records/17400047
 
 The repository contains the following model files:
 - `model.pth` - Classical model for standard predictions
